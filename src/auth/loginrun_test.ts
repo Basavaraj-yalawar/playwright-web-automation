@@ -9,7 +9,20 @@ const envPath = path.resolve(process.cwd(), ".env");
 console.log("🔍 Attempting to load .env from:", envPath);
 console.log("🔍 .env file exists:", fs.existsSync(envPath));
 
-dotenv.config({ path: envPath });
+// Debug: Show actual .env file content
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, "utf-8");
+  console.log("📄 .env file content:");
+  console.log(envContent);
+}
+
+const result = dotenv.config({ path: envPath });
+if (result.error) {
+  console.error("❌ dotenv.config() error:", result.error);
+} else {
+  console.log("✅ dotenv.config() loaded successfully");
+  console.log("📦 Parsed variables:", Object.keys(result.parsed || {}));
+}
 
 export async function loginForrun_test(): Promise<Page> {
   const {
