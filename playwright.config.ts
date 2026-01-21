@@ -41,6 +41,9 @@ export default defineConfig({
 
   // Ensure workers inherit environment variables
   workers: 1,
+  
+  // Global setup to capture environment variables
+  globalSetup: require.resolve("./global-setup"),
 
   reporter: [
     ["list"],
