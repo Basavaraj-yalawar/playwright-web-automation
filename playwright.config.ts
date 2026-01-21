@@ -39,6 +39,9 @@ if (process.env.CI !== "true") {
 export default defineConfig({
   testDir: "./tests",
 
+  // Ensure workers inherit environment variables
+  workers: 1,
+
   reporter: [
     ["list"],
     ["html", { outputFolder: "playwright-report", open: "never" }],
