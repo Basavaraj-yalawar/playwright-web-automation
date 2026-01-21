@@ -22,6 +22,16 @@ if (result.error) {
 } else {
   console.log("✅ dotenv.config() loaded successfully");
   console.log("📦 Parsed variables:", Object.keys(result.parsed || {}));
+  
+  // Explicitly set environment variables from parsed result
+  if (result.parsed) {
+    Object.keys(result.parsed).forEach(key => {
+      if (!process.env[key]) {
+        process.env[key] = result.parsed![key];
+        console.log(`🔧 Set ${key} from dotenv`);
+      }
+    });
+  }
 }
 
 export async function loginForrun_test(): Promise<Page> {
