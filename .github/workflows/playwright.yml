@@ -44,17 +44,16 @@ jobs:
           echo "USERNAME set: $([[ -n \"$USERNAME\" ]] && echo yes || echo no)"
           echo "PASSWORD set: $([[ -n \"$PASSWORD\" ]] && echo yes || echo no)"
           
-          # Create .env file from secrets for CI run
-          cat > .env << EOF
-          BASE_URL=$BASE_URL
-          LOGIN_PATH=$LOGIN_PATH
-          USERNAME=$USERNAME
-          PASSWORD=$PASSWORD
-          LOGIN_USER=$USERNAME
-          LOGIN_PASS=$PASSWORD
-          EOF
+          # Create .env file from secrets for CI run using echo
+          echo "BASE_URL=$BASE_URL" > .env
+          echo "LOGIN_PATH=$LOGIN_PATH" >> .env
+          echo "USERNAME=$USERNAME" >> .env
+          echo "PASSWORD=$PASSWORD" >> .env
+          echo "LOGIN_USER=$USERNAME" >> .env
+          echo "LOGIN_PASS=$PASSWORD" >> .env
           
           echo "✅ .env file created for CI"
+          cat .env
           
           npx playwright test tests/run_test.spec.ts
 
