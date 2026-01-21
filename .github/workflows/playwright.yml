@@ -44,13 +44,17 @@ jobs:
           echo "USERNAME set: $([[ -n \"$USERNAME\" ]] && echo yes || echo no)"
           echo "PASSWORD set: $([[ -n \"$PASSWORD\" ]] && echo yes || echo no)"
           
-          # Create .env file from secrets for CI run using echo
-          echo "BASE_URL=$BASE_URL" > .env
-          echo "LOGIN_PATH=$LOGIN_PATH" >> .env
-          echo "USERNAME=$USERNAME" >> .env
-          echo "PASSWORD=$PASSWORD" >> .env
-          echo "LOGIN_USER=$USERNAME" >> .env
-          echo "LOGIN_PASS=$PASSWORD" >> .env
+          # Debug: Show actual values
+          echo "DEBUG BASE_URL value: [$BASE_URL]"
+          echo "DEBUG USERNAME value: [$USERNAME]"
+          
+          # Create .env file from secrets for CI run using printf
+          printf "BASE_URL=%s\n" "$BASE_URL" > .env
+          printf "LOGIN_PATH=%s\n" "$LOGIN_PATH" >> .env
+          printf "USERNAME=%s\n" "$USERNAME" >> .env
+          printf "PASSWORD=%s\n" "$PASSWORD" >> .env
+          printf "LOGIN_USER=%s\n" "$USERNAME" >> .env
+          printf "LOGIN_PASS=%s\n" "$PASSWORD" >> .env
           
           echo "✅ .env file created for CI"
           cat .env

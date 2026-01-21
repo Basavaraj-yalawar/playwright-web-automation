@@ -37,13 +37,24 @@ function loadEnvVars(): Record<string, string> {
 }
 
 export async function loginForrun_test(): Promise<Page> {
-  // ✅ FIX: Check process.env FIRST (CI sets these), then fall back to .env file
-  const BASE_URL = process.env.BASE_URL || loadEnvVars().BASE_URL;
-  const LOGIN_PATH = process.env.LOGIN_PATH || loadEnvVars().LOGIN_PATH;
-  const USERNAME = process.env.USERNAME || loadEnvVars().USERNAME;
-  const PASSWORD = process.env.PASSWORD || loadEnvVars().PASSWORD;
+  // ✅ FIX: Prioritize process.env (CI/GitHub Actions), fallback to .env file (local)
+  let BASE_URL = process.env.BASE_URL;
+  let LOGIN_PATH = process.env.LOGIN_PATH;
+  let USERNAME = process.env.USERNAME;
+  let PASSWORD = process.env.PASSWORD;
+
+  // If any required var is missing from process.env, load from .env file
+  if (!BASE_URL || !LOGIN_PATH || !USERNAME || !PASSWORD) {
+    console.log("⚠️  Some env vars missing from process.env, loading from .env file...");
+    const envVars = loadEnvVars();
+    BASE_URL = BASE_URL || envVars.BASE_URL;
+    LOGIN_PATH = LOGIN_PATH || envVars.LOGIN_PATH;
+    USERNAME = USERNAME || envVars.USERNAME;
+    PASSWORD = PASSWORD || envVars.PASSWORD;
+  }
 
   console.log("🔍 Environment check:");
+  console.log("  CI mode:", process.env.CI ? "YES" : "NO");
   console.log("  BASE_URL:", BASE_URL || "MISSING");
   console.log("  LOGIN_PATH:", LOGIN_PATH || "MISSING");
   console.log("  USERNAME:", USERNAME || "MISSING");
@@ -51,7 +62,7 @@ export async function loginForrun_test(): Promise<Page> {
 
   if (!BASE_URL || !LOGIN_PATH || !USERNAME || !PASSWORD) {
     throw new Error(
-      "Missing env vars: BASE_URL, LOGIN_PATH, USERNAME, PASSWORD"
+      "❌ Missing required env vars: BASE_URL, LOGIN_PATH, USERNAME, PASSWORD"
     );
   }
 
