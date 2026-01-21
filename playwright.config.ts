@@ -8,30 +8,25 @@ import dotenv from "dotenv";
  * ENV LOADING STRATEGY
  * =====================================================
  *
- * 1. CI env vars take priority (already in process.env)
- * 2. Load `.env` for local development
- * 3. Load `.env.run_test` (optional, replay-only)
+ * 1. Load `.env` (created from secrets in CI, or local file)
+ * 2. Load `.env.run_test` (optional, replay-only)
  *
- * This DOES NOT break create_test.
- * This ENABLES replay locally & in CI.
+ * This works for both local and CI environments.
  */
 
-/* ---------- Only load .env files if NOT in CI ---------- */
-if (process.env.CI !== "true") {
-  /* ---------- create_test env (existing, unchanged) ---------- */
+/* ---------- Load .env file (always) ---------- */
+dotenv.config({
+  path: path.resolve(__dirname, ".env"),
+  override: false,
+});
+
+/* ---------- run_test env (optional, replay-only) ---------- */
+const runTestEnvPath = path.resolve(__dirname, ".env.run_test");
+if (fs.existsSync(runTestEnvPath)) {
   dotenv.config({
-    path: path.resolve(__dirname, ".env"),
+    path: runTestEnvPath,
     override: false,
   });
-
-  /* ---------- run_test env (optional, replay-only) ---------- */
-  const runTestEnvPath = path.resolve(__dirname, ".env.run_test");
-  if (fs.existsSync(runTestEnvPath)) {
-    dotenv.config({
-      path: runTestEnvPath,
-      override: false,
-    });
-  }
 }
 
 /* ===================================================== */

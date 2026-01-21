@@ -43,7 +43,19 @@ jobs:
           echo "LOGIN_PATH set: $([[ -n \"$LOGIN_PATH\" ]] && echo yes || echo no)"
           echo "USERNAME set: $([[ -n \"$USERNAME\" ]] && echo yes || echo no)"
           echo "PASSWORD set: $([[ -n \"$PASSWORD\" ]] && echo yes || echo no)"
-
+          
+          # Create .env file from secrets for CI run
+          cat > .env << EOF
+          BASE_URL=$BASE_URL
+          LOGIN_PATH=$LOGIN_PATH
+          USERNAME=$USERNAME
+          PASSWORD=$PASSWORD
+          LOGIN_USER=$USERNAME
+          LOGIN_PASS=$PASSWORD
+          EOF
+          
+          echo "✅ .env file created for CI"
+          
           npx playwright test tests/run_test.spec.ts
 
       - name: Upload run_test report
