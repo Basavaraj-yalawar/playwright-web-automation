@@ -298,7 +298,7 @@ export async function runrun_test(): Promise<void> {
             liveFirstP: "Failed verification",
             reason: failedPage.failureReason,
           });
-          await sendFailureEmail("❌ run_test Verification Failed", emailHtml);
+          await sendFailureEmail("❌ Content Verification Failed - run_test Alert", emailHtml);
           console.log("✅ Failure email sent successfully");
         }
       } catch (emailError) {
