@@ -15,6 +15,7 @@ function loadEnvVars(): Record<string, string> {
   
   const envContent = fs.readFileSync(envPath, "utf-8");
   console.log("📄 .env file loaded, size:", envContent.length, "bytes");
+  console.log("📄 .env file content:\n", envContent);
   
   const vars: Record<string, string> = {};
   
@@ -27,6 +28,7 @@ function loadEnvVars(): Record<string, string> {
     if (key && valueParts.length > 0) {
       const value = valueParts.join('=').trim();
       vars[key.trim()] = value;
+      console.log(`  ${key.trim()} = "${value}"`);
     }
   });
   
