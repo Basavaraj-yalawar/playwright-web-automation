@@ -1,0 +1,77 @@
+# ===============================
+# SYSTEM REQUIREMENTS
+# ===============================
+
+Node.js >= 18.x
+npm >= 9.x
+Git
+
+# ===============================
+# RUNTIME ENVIRONMENT
+# ===============================
+
+Chromium Browser (installed via Playwright)
+Linux / Windows / macOS supported
+
+# ===============================
+# NODE DEPENDENCIES (npm)
+# ===============================
+
+# Playwright (API + Test Runner)
+playwright@^1.41.2
+@playwright/test@^1.41.2
+
+# Language & Runtime
+typescript@^5.3.3
+ts-node@^10.9.2
+@types/node@^20.11.30
+dotenv@^16.4.5
+
+# API Automation & Reporting
+newman@^6.2.1
+newman-reporter-htmlextra@^1.23.1
+
+# ===============================
+# REQUIRED ENV VARIABLES
+# ===============================
+
+BASE_URL
+USERNAME
+PASSWORD
+
+# ===============================
+# INSTALL COMMANDS
+# ===============================
+
+npm ci
+npx playwright install --with-deps
+
+# ================================
+# Runtime Requirements
+# ================================
+
+Node.js >= 18.x
+npm >= 9.x
+
+# ================================
+# Playwright
+# ================================
+
+playwright (installed via npm)
+chromium (installed via playwright)
+
+# ================================
+# CI / Environment
+# ================================
+
+GitHub Actions compatible
+Linux / macOS / Windows supported
+
+# ================================
+# Notes
+# ================================
+
+- This project does NOT use Python runtime code.
+- requirements.txt is informational for CI / onboarding.
+- All executable dependencies are managed via package.json.
+

@@ -1,0 +1,21 @@
+{
+  "name": "playwright-create_tester",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "create_test": "ts-node src/index.ts",
+    "run_test": "ts-node src/index.ts run_test"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "nodemailer": "^7.0.11",
+    "playwright": "^1.57.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^25.0.3",
+    "@types/nodemailer": "^7.0.4"
+  }
+}
