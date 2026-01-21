@@ -1,49 +1,50 @@
 import { chromium, Page } from "playwright";
 import { LOGIN_SELECTORS } from "../config/selector";
-import dotenv from "dotenv";
 import path from "path";
 import fs from "fs";
 
-// Load environment variables at the module level - use process.cwd() for reliable path
-const envPath = path.resolve(process.cwd(), ".env");
-console.log("🔍 Attempting to load .env from:", envPath);
-console.log("🔍 .env file exists:", fs.existsSync(envPath));
-
-// Debug: Show actual .env file content
-if (fs.existsSync(envPath)) {
-  const envContent = fs.readFileSync(envPath, "utf-8");
-  console.log("📄 .env file content:");
-  console.log(envContent);
-}
-
-const result = dotenv.config({ path: envPath });
-if (result.error) {
-  console.error("❌ dotenv.config() error:", result.error);
-} else {
-  console.log("✅ dotenv.config() loaded successfully");
-  console.log("📦 Parsed variables:", Object.keys(result.parsed || {}));
+// Manual .env parsing function
+function loadEnvVars(): Record<string, string> {
+  const envPath = path.resolve(process.cwd(), ".env");
+  console.log("🔍 Loading .env from:", envPath);
   
-  // Explicitly set environment variables from parsed result
-  if (result.parsed) {
-    Object.keys(result.parsed).forEach(key => {
-      if (!process.env[key]) {
-        process.env[key] = result.parsed![key];
-        console.log(`🔧 Set ${key} from dotenv`);
-      }
-    });
+  if (!fs.existsSync(envPath)) {
+    console.error("❌ .env file not found");
+    return {};
   }
+  
+  const envContent = fs.readFileSync(envPath, "utf-8");
+  console.log("📄 .env file loaded, size:", envContent.length, "bytes");
+  
+  const vars: Record<string, string> = {};
+  
+  envContent.split('\n').forEach(line => {
+    line = line.trim();
+    // Skip comments and empty lines
+    if (!line || line.startsWith('#')) return;
+    
+    const [key, ...valueParts] = line.split('=');
+    if (key && valueParts.length > 0) {
+      const value = valueParts.join('=').trim();
+      vars[key.trim()] = value;
+    }
+  });
+  
+  console.log("✅ Parsed variables:", Object.keys(vars));
+  return vars;
 }
 
 export async function loginForrun_test(): Promise<Page> {
-  const {
-    BASE_URL,
-    LOGIN_PATH,
-    USERNAME,
-    PASSWORD,
-  } = process.env;
+  // Load environment variables directly
+  const envVars = loadEnvVars();
+  
+  const BASE_URL = envVars.BASE_URL || process.env.BASE_URL;
+  const LOGIN_PATH = envVars.LOGIN_PATH || process.env.LOGIN_PATH;
+  const USERNAME = envVars.USERNAME || process.env.USERNAME;
+  const PASSWORD = envVars.PASSWORD || process.env.PASSWORD;
 
   console.log("🔍 Environment check:");
-  console.log("  BASE_URL:", BASE_URL ? `${BASE_URL.substring(0, 20)}...` : "MISSING");
+  console.log("  BASE_URL:", BASE_URL || "MISSING");
   console.log("  LOGIN_PATH:", LOGIN_PATH || "MISSING");
   console.log("  USERNAME:", USERNAME || "MISSING");
   console.log("  PASSWORD:", PASSWORD ? "***" : "MISSING");
