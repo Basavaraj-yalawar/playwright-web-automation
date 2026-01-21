@@ -37,13 +37,11 @@ function loadEnvVars(): Record<string, string> {
 }
 
 export async function loginForrun_test(): Promise<Page> {
-  // Load environment variables directly
-  const envVars = loadEnvVars();
-  
-  const BASE_URL = envVars.BASE_URL || process.env.BASE_URL;
-  const LOGIN_PATH = envVars.LOGIN_PATH || process.env.LOGIN_PATH;
-  const USERNAME = envVars.USERNAME || process.env.USERNAME;
-  const PASSWORD = envVars.PASSWORD || process.env.PASSWORD;
+  // ✅ FIX: Check process.env FIRST (CI sets these), then fall back to .env file
+  const BASE_URL = process.env.BASE_URL || loadEnvVars().BASE_URL;
+  const LOGIN_PATH = process.env.LOGIN_PATH || loadEnvVars().LOGIN_PATH;
+  const USERNAME = process.env.USERNAME || loadEnvVars().USERNAME;
+  const PASSWORD = process.env.PASSWORD || loadEnvVars().PASSWORD;
 
   console.log("🔍 Environment check:");
   console.log("  BASE_URL:", BASE_URL || "MISSING");
