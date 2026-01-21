@@ -1,5 +1,10 @@
 import { chromium, Page } from "playwright";
 import { LOGIN_SELECTORS } from "../config/selector";
+import dotenv from "dotenv";
+import path from "path";
+
+// Load environment variables at the module level
+dotenv.config({ path: path.resolve(__dirname, "..", "..", ".env") });
 
 export async function loginForrun_test(): Promise<Page> {
   const {
