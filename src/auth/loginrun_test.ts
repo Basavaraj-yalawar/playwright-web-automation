@@ -2,9 +2,14 @@ import { chromium, Page } from "playwright";
 import { LOGIN_SELECTORS } from "../config/selector";
 import dotenv from "dotenv";
 import path from "path";
+import fs from "fs";
 
-// Load environment variables at the module level
-dotenv.config({ path: path.resolve(__dirname, "..", "..", ".env") });
+// Load environment variables at the module level - use process.cwd() for reliable path
+const envPath = path.resolve(process.cwd(), ".env");
+console.log("🔍 Attempting to load .env from:", envPath);
+console.log("🔍 .env file exists:", fs.existsSync(envPath));
+
+dotenv.config({ path: envPath });
 
 export async function loginForrun_test(): Promise<Page> {
   const {
@@ -13,6 +18,12 @@ export async function loginForrun_test(): Promise<Page> {
     USERNAME,
     PASSWORD,
   } = process.env;
+
+  console.log("🔍 Environment check:");
+  console.log("  BASE_URL:", BASE_URL ? `${BASE_URL.substring(0, 20)}...` : "MISSING");
+  console.log("  LOGIN_PATH:", LOGIN_PATH || "MISSING");
+  console.log("  USERNAME:", USERNAME || "MISSING");
+  console.log("  PASSWORD:", PASSWORD ? "***" : "MISSING");
 
   if (!BASE_URL || !LOGIN_PATH || !USERNAME || !PASSWORD) {
     throw new Error(
