@@ -37,6 +37,11 @@ jobs:
           LOGIN_PATH: ${{ secrets.LOGIN_PATH }}
           USERNAME: ${{ secrets.USERNAME }}
           PASSWORD: ${{ secrets.PASSWORD }}
+          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+          EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          ALERT_TO: ${{ secrets.ALERT_TO }}
         run: |
           echo "🔐 Secrets check:"
           echo "BASE_URL set: $([[ -n \"$BASE_URL\" ]] && echo yes || echo no)"
@@ -55,8 +60,13 @@ jobs:
           printf "PASSWORD=%s\n" "$PASSWORD" >> .env
           printf "LOGIN_USER=%s\n" "$USERNAME" >> .env
           printf "LOGIN_PASS=%s\n" "$PASSWORD" >> .env
+          printf "EMAIL_HOST=%s\n" "$EMAIL_HOST" >> .env
+          printf "EMAIL_PORT=%s\n" "$EMAIL_PORT" >> .env
+          printf "EMAIL_USER=%s\n" "$EMAIL_USER" >> .env
+          printf "EMAIL_PASS=%s\n" "$EMAIL_PASS" >> .env
+          printf "ALERT_TO=%s\n" "$ALERT_TO" >> .env
           
-          echo "✅ .env file created for CI"
+          echo "✅ .env file created for CI with email configuration"
           cat .env
           
           npx playwright test tests/run_test.spec.ts

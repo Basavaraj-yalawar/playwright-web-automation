@@ -8,6 +8,7 @@ import path from "path";
 
 import { loginForrun_test } from "../auth/loginrun_test";
 import { captureFailureScreenshot, captureSuccessScreenshot } from "./artifacts/screenshot";
+import { sendFailureEmail, buildMinimalFailureEmail } from "./utils/email";
 
 /* ================= TYPES ================= */
 
@@ -284,6 +285,27 @@ export async function runrun_test(): Promise<void> {
   const browser = page.context().browser();
 
   if (results.some(r => !r.pass)) {
+    // Send failure email if configured
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS && process.env.ALERT_TO) {
+      console.log("📧 Sending failure email notification...");
+      try {
+        const failedPage = results.find(r => !r.pass);
+        if (failedPage) {
+          const emailHtml = buildMinimalFailureEmail({
+            step: failedPage.pageIndex + 1,
+            url: failedPage.url,
+            create_testedFirstP: failedPage.items[0]?.text || "N/A",
+            liveFirstP: "Failed verification",
+            reason: failedPage.failureReason,
+          });
+          await sendFailureEmail("❌ run_test Verification Failed", emailHtml);
+          console.log("✅ Failure email sent successfully");
+        }
+      } catch (emailError) {
+        console.error("⚠️ Failed to send email notification:", emailError);
+      }
+    }
+    
     if (browser) await browser.close();
     throw new Error("❌ run_test verification failed");
   }
