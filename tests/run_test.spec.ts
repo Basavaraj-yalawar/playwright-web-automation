@@ -1,5 +1,10 @@
 import { test } from "@playwright/test";
 import { runrun_test } from "../src/run_test/run_test";
+import dotenv from "dotenv";
+import path from "path";
+
+// Load environment variables in test context
+dotenv.config({ path: path.resolve(__dirname, "..", ".env") });
 
 test("run_test replay verification", async () => {
   // Debug: Log environment variables available in test context
